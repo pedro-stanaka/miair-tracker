@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/laptop-super-tracker.iml" filepath="$PROJECT_DIR$/.idea/modules/laptop-super-tracker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/laptop-super-tracker_main.iml" filepath="$PROJECT_DIR$/.idea/modules/laptop-super-tracker_main.iml" group="laptop-super-tracker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/laptop-super-tracker_test.iml" filepath="$PROJECT_DIR$/.idea/modules/laptop-super-tracker_test.iml" group="laptop-super-tracker" />
+    </modules>
+  </component>
+</project>
