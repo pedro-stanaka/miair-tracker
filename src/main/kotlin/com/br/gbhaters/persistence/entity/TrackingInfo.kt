@@ -1,10 +1,12 @@
 package com.br.gbhaters.persistence.entity
 
 import com.github.kittinunf.fuel.core.ResponseDeserializable
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.sound.midi.Track
 
 class TrackingInfo(
         val code: String?,
@@ -23,17 +25,41 @@ class TrackingInfo(
             val parser = JsonParser()
             val obj = parser.parse(content).asJsonObject
 
-            val formatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.FRANCE)
+            return Companion.parseFromJsonObject(obj)
+        }
 
-            val trackingCode = obj.get("code").asString
-            val dateStr = obj.get("date").asString
-            val date = LocalDate.parse(dateStr, formatter)
-            val status = obj.get("status").asString
-            val message = obj.get("message").asString
-            val link = obj.get("link").asString
-            val type = obj.get("type").asString
+        companion object {
+            fun parseFromJsonObject(obj: JsonObject): TrackingInfo {
+                val formatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.FRANCE)
 
-            return TrackingInfo(trackingCode, date, status, message, link, type)
+                val trackingCode = getString(obj, "code")
+                val dateStr = getString(obj, "date")
+                val date = if (!dateStr.isEmpty()) LocalDate.parse(dateStr, formatter) else null
+                val status = getString(obj, "status")
+                val message = getString(obj, "message")
+                val link = getString(obj, "link")
+                val type = getString(obj, "type")
+
+                return TrackingInfo(trackingCode, date, status, message, link, type)
+            }
+
+            private fun getString(obj: JsonObject, prop: String) = if (obj.has(prop)) obj.get(prop).asString else ""
+        }
+    }
+
+    class ListDeserializer: ResponseDeserializable<List<TrackingInfo>> {
+        override fun deserialize(content: String): List<TrackingInfo> {
+            val parser = JsonParser()
+            val objectList = parser.parse(content).asJsonArray
+
+            return objectList.map {
+                if (it.asJsonObject.has("data"))
+                    it.asJsonObject.get("data").asJsonObject
+                else
+                    it.asJsonObject.get("error").asJsonObject
+            }.map {
+                Deserializer.parseFromJsonObject(it)
+            }
         }
     }
 }

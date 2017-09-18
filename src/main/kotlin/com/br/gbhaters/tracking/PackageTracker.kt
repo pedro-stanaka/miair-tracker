@@ -7,9 +7,11 @@ fun main(args: Array<String>) {
 
     val client = LaPosteClient()
 
-    val trackingInfo = client.getTrackingInfo(code)
+    val codeList = listOf("EY893054059FR", "EY893054116FR", "EY893054491FR")
 
-    if (trackingInfo != null) {
-        println(trackingInfo)
-    }
+    val trackingList = client.getBatchTrackingInfo(codeList)
+
+    trackingList.forEach({
+        println(it)
+    })
 }

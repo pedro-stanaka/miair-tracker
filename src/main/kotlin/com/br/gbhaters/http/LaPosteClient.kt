@@ -7,6 +7,7 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.natpryce.konfig.ConfigurationProperties
 import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.overriding
+import javax.sound.midi.Track
 
 class LaPosteClient {
     private val API_BASE = "https://api.laposte.fr/suivi/v1"
@@ -29,7 +30,13 @@ class LaPosteClient {
         return result.get()
     }
 
-    fun getBatchTrackingInfo(codeList: List<String>) {
+    fun getBatchTrackingInfo(codeList: List<String>): List<TrackingInfo> {
+        val codesString = codeList.joinToString(separator = ",")
 
+        val (_, _, result) = Fuel.get("/list?codes=$codesString").header(mapOf(
+                Pair("X-Okapi-Key", API_KEY)
+        )).responseObject(TrackingInfo.ListDeserializer())
+
+        return result.get()
     }
 }

@@ -1,5 +1,7 @@
 package com.br.gbhaters.tracking
 
+import com.br.gbhaters.persistence.entity.TrackingInfo
+import com.google.gson.GsonBuilder
 import java.io.File
 
 class CodeGenerator(private val prefix: String = "FAF", private val suffix: String = "FR") {
@@ -29,10 +31,6 @@ fun main(args: Array<String>) {
     val codeGenerator = CodeGenerator("EY8930", suffix = "FR")
 
     val codeList = codeGenerator.generateAllCodes()
-
-    val chunkSize = 1000
-
-    var chunkCount = 0
 
     File("todos_codigos.txt").bufferedWriter().use { out ->
         codeList.forEach {
