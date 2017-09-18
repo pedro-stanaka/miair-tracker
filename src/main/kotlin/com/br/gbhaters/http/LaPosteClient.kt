@@ -7,7 +7,6 @@ import com.github.kittinunf.fuel.core.FuelManager
 import com.natpryce.konfig.ConfigurationProperties
 import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.overriding
-import javax.sound.midi.Track
 
 class LaPosteClient {
     private val API_BASE = "https://api.laposte.fr/suivi/v1"

@@ -3,8 +3,6 @@ package com.br.gbhaters.tracking
 import com.br.gbhaters.http.LaPosteClient
 
 fun main(args: Array<String>) {
-    val code = "EY893053305FR"
-
     val client = LaPosteClient()
 
     val codeList = listOf("EY893054059FR", "EY893054116FR", "EY893054491FR")
