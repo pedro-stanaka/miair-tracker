@@ -1,4 +1,4 @@
-package com.br.gbhaters
+package com.br.gbhaters.tracking
 
 import java.io.File
 
@@ -29,10 +29,6 @@ fun main(args: Array<String>) {
     val codeGenerator = CodeGenerator("EY8930", suffix = "FR")
 
     val codeList = codeGenerator.generateAllCodes()
-
-    val chunkSize = 1000
-
-    var chunkCount = 0
 
     File("todos_codigos.txt").bufferedWriter().use { out ->
         codeList.forEach {

@@ -1,0 +1,26 @@
+[
+  {
+    "data": {
+      "status": "EN_LIVRAISON",
+      "code": "EY893054059FR",
+      "date": "13/09/2017",
+      "message": "Votre colis est en cours d'acheminement.",
+      "link": "http://www.colissimo.fr/portail_colissimo/suivre.do?colispart=EY893054059FR"
+    }
+  },
+  {
+    "data": {
+      "status": "INCONNU",
+      "code": "EY893054116FR",
+      "date": "13/09/2017",
+      "message": "Votre colis a quitté le pays d'origine.",
+      "link": "http://www.colissimo.fr/portail_colissimo/suivre.do?colispart=EY893054116FR"
+    }
+  },
+  {
+    "error": {
+      "message": "Ce code produit n'est pas valide.",
+      "code": "BAD_REQUEST"
+    }
+  }
+]
