@@ -30,11 +30,11 @@ class LaPosteClient {
     }
 
     fun getBatchTrackingInfo(codeList: List<String>): List<TrackingInfo> {
-        val codesString = codeList.joinToString(separator = ",")
+        val codesString = codeList.joinToString(separator = ",") { it.trim() }
 
         val (_, _, result) = Fuel.get("/list?codes=$codesString").header(mapOf(
                 Pair("X-Okapi-Key", API_KEY)
-        )).responseObject(TrackingInfo.ListDeserializer())
+        )).timeout(5_000).responseObject(TrackingInfo.ListDeserializer())
 
         return result.get()
     }

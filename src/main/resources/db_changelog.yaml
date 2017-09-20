@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: pedro-stanaka
+      changes:
+        - createTable:
+            tableName: tracking
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated
+                  type: date
+              - column:
+                  name: status
+                  type: varchar(200)
+              - column:
+                  name: message
+                  type: text
+              - column:
+                  name: link
+                  type: varchar(280)
+              - column:
+                  name: sub_carrier
+                  type: varchar(100)
+
+  - changeSet:
+      id: 2
+      author: pedro-stanaka
+      changes:
+      - addColumn:
+            columns:
+            - column:
+                name: generated_code
+                type: varchar(50)
+            tableName: tracking
+
+  - changeSet:
+        id: 3
+        author: pedro-stanaka
+        changes:
+        - addColumn:
+              columns:
+              - column:
+                  name: created
+                  type: timestamp
+              tableName: tracking
