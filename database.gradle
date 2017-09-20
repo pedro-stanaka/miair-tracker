@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'liquibase'
+
+repositories {
+    mavenCentral()
+}
+
+def props = new Properties()
+file("src/main/resources/application.properties").withInputStream { props.load(it) }
+
+
+liquibase {
+    activities {
+        main {
+            changeLogFile "src/main/resources/db_changelog.yaml"
+            url props.getProperty("database.url")
+            username props.getProperty("database.username")
+            password props.getProperty("database.password")
+        }
+    }
+}
