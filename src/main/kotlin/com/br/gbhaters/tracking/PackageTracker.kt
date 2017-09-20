@@ -19,7 +19,11 @@ fun main(args: Array<String>) {
 
     DbConnection.startExposedConnection()
 
-    codeList.asSequence().batch(120).forEach {
+    val lastCode = TrackingInfoDao.getLastInsertedCode()
+
+    val newList = codeList.slice(codeList.indexOf(lastCode) until codeList.size)
+
+    newList.asSequence().batch(120).forEach {
         println("Began request for LaPoste ${LocalDateTime.now()}")
         val trackingList = client.getBatchTrackingInfo(it)
 

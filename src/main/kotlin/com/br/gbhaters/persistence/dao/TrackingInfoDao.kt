@@ -10,7 +10,23 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 
 class TrackingInfoDao (id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<TrackingInfoDao>(TrackingInfoTable)
+    companion object : IntEntityClass<TrackingInfoDao>(TrackingInfoTable) {
+        fun getLastInsertedCode(): String {
+            var generatedCode = ""
+
+            transaction {
+                val query = TrackingInfoDao
+                        .find { TrackingInfoTable.generatedCode neq null }
+                        .sortedBy { TrackingInfoTable.id }
+                        .reversed()
+                        .first()
+
+                generatedCode = query.generatedCode
+            }
+
+            return generatedCode
+        }
+    }
 
     var generatedCode by TrackingInfoTable.generatedCode
     var code by TrackingInfoTable.code
@@ -21,11 +37,5 @@ class TrackingInfoDao (id: EntityID<Int>) : IntEntity(id) {
     var type by TrackingInfoTable.type
     var created by TrackingInfoTable.created
 
-    fun getLastInsertedCode(): String {
-        DbConnection.startExposedConnection()
 
-        transaction {
-            TrackingInfoDao.searchQuery(Op.build { TrackingInfoTable.code == "" }).orderBy()
-        }
-    }
 }
