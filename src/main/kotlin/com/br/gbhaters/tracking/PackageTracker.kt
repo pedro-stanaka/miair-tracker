@@ -1,50 +1,62 @@
 package com.br.gbhaters.tracking
 
-import com.br.gbhaters.config.DatabaseConfig
 import com.br.gbhaters.http.LaPosteClient
+import com.br.gbhaters.persistence.connection.DbConnection
 import com.br.gbhaters.persistence.dao.TrackingInfoDao
+import com.br.gbhaters.persistence.entity.TrackingInfo
 import com.br.gbhaters.persistence.table.TrackingInfoTable
 import com.br.gbhaters.util.DateConversion
-import com.natpryce.konfig.ConfigurationProperties
-import com.natpryce.konfig.EnvironmentVariables
-import com.natpryce.konfig.overriding
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.StdOutSqlLogger
+import com.br.gbhaters.util.batch
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
+import java.io.File
+import java.time.LocalDateTime
 
 fun main(args: Array<String>) {
     val client = LaPosteClient()
 
-    val config = ConfigurationProperties.systemProperties() overriding
-            EnvironmentVariables() overriding
-            ConfigurationProperties.fromResource("application.properties")
-    val url = config[DatabaseConfig.url]
-    Database.connect(url, "org.postgresql.Driver", config[DatabaseConfig.username], config[DatabaseConfig.password])
+    val codeList = File("todos_codigos.txt").readLines()
 
-    val codeList = listOf("EY893054059FR", "EY893054116FR", "EY893054491FR")
+    DbConnection.startExposedConnection()
 
-    val trackingList = client.getBatchTrackingInfo(codeList)
+    codeList.asSequence().batch(120).forEach {
+        println("Began request for LaPoste ${LocalDateTime.now()}")
+        val trackingList = client.getBatchTrackingInfo(it)
 
-    trackingList.forEach { println(it) }
+        println("List size: ${trackingList.size} ${LocalDateTime.now()}")
+        println("First code of batch: ${trackingList.first()}/${it.first()}")
+        println("First code of batch: ${trackingList.last()}/${it.last()}")
 
-    transaction {
-        logger.addLogger(StdOutSqlLogger)
+        trackingList.groupBy { it.code }.forEach { (code, list) -> println("$code : count => ${list.size}") }
 
-        trackingList.forEach({
-            if (TrackingInfoDao.find { TrackingInfoTable.code eq it.code }.empty()) {
-                val date = DateConversion.fromLocalDateToDateTime(it.date)
 
-                println(date)
-
-                TrackingInfoDao.new {
-                    code = it.code.orEmpty()
-                    updated = date
-                    status = it.status
-                    message = it.message
-                    link = it.link
-                    type = it.type
+        transaction {
+            val now = DateTime.now()
+//            logger.addLogger(StdOutSqlLogger)
+            it.zip(trackingList).forEach { (codeAttempt, trackingInfo) ->
+                if (TrackingInfoDao.find { TrackingInfoTable.generatedCode eq codeAttempt }.empty()) {
+                    createTracking(trackingInfo, codeAttempt, now)
                 }
             }
-        })
+
+        }
+
+        println("######")
+        Thread.sleep(4_000)
+    }
+}
+
+private fun createTracking(trackingInfo: TrackingInfo, codeAttempt: String, now: DateTime) {
+    val date = DateConversion.fromLocalDateToDateTime(trackingInfo.date)
+
+    TrackingInfoDao.new {
+        generatedCode = codeAttempt
+        code = trackingInfo.code.orEmpty()
+        updated = date
+        status = trackingInfo.status
+        message = trackingInfo.message
+        link = trackingInfo.link
+        type = trackingInfo.type
+        created = now
     }
 }
