@@ -1,19 +1,20 @@
 package com.br.gbhaters.persistence.entity
 
+import com.br.gbhaters.util.TrackingInfoBuilder
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
 
-class TrackingInfo (
-        val code: String?,
-        val date: LocalDate?,
-        val status: String,
-        val message: String,
-        val link: String,
-        val type: String) {
+class TrackingInfo(
+        var code: String?,
+        var date: LocalDate?,
+        var status: String,
+        var message: String,
+        var link: String,
+        var type: String) {
+
+    constructor() : this("", LocalDate.now(), "", "", "", "")
 
     override fun toString(): String {
         return "TrackingInfo(trackingCode='$code', date=$date, status='$status', message='$message', link='$link', type='$type')"
@@ -29,24 +30,22 @@ class TrackingInfo (
 
         companion object {
             fun parseFromJsonObject(obj: JsonObject): TrackingInfo {
-                val formatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.FRANCE)
+                val builder = TrackingInfoBuilder.builder()
 
-                val trackingCode = getString(obj, "code")
-                val dateStr = getString(obj, "date")
-                val date = if (!dateStr.isEmpty()) LocalDate.parse(dateStr, formatter) else null
-                val status = getString(obj, "status")
-                val message = getString(obj, "message")
-                val link = getString(obj, "link")
-                val type = getString(obj, "type")
-
-                return TrackingInfo(trackingCode, date, status, message, link, type)
+                return builder.withCode(getString(obj, "code"))
+                        .withDateFromString(getString(obj, "date"), "d/MM/yyyy")
+                        .withStatus(getString(obj, "status"))
+                        .withMessage(getString(obj, "message"))
+                        .withLink(getString(obj, "link"))
+                        .withType(getString(obj, "type"))
+                        .build()
             }
 
             private fun getString(obj: JsonObject, prop: String) = if (obj.has(prop)) obj.get(prop).asString else ""
         }
     }
 
-    class ListDeserializer: ResponseDeserializable<List<TrackingInfo>> {
+    class ListDeserializer : ResponseDeserializable<List<TrackingInfo>> {
         override fun deserialize(content: String): List<TrackingInfo> {
             val parser = JsonParser()
             val objectList = parser.parse(content).asJsonArray
