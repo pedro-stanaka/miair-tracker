@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class TrackingInfo(
+class TrackingInfo (
         val code: String?,
         val date: LocalDate?,
         val status: String,

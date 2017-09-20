@@ -13,9 +13,9 @@ liquibase {
     activities {
         main {
             changeLogFile "src/main/resources/db_changelog.yaml"
-            url props.getProperty("database.url")
-            username props.getProperty("database.username")
-            password props.getProperty("database.password")
+            url props.getProperty("DatabaseConfig.url")
+            username props.getProperty("DatabaseConfig.username")
+            password props.getProperty("DatabaseConfig.password")
         }
     }
 }
