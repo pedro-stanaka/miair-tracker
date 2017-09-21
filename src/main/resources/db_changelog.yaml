@@ -55,3 +55,29 @@ databaseChangeLog:
                   name: created
                   type: timestamp
               tableName: tracking
+
+  - changeSet:
+        id: 4
+        author: pedro-stanaka
+        changes:
+          - createTable:
+              tableName: tracking_codes
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      nullable: false
+                - column:
+                    name: code
+                    type: varchar(50)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: destination
+                    type: varchar(50)
+                - column:
+                    name: original_code
+                    type: varchar(50)
