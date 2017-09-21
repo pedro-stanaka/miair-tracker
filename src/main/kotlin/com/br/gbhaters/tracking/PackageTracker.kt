@@ -21,7 +21,8 @@ fun main(args: Array<String>) {
 
     val lastCode = TrackingInfoDao.getLastInsertedCode()
 
-    val newList = codeList.slice(codeList.indexOf(lastCode) until codeList.size)
+    val indexOf = if (codeList.indexOf(lastCode) != -1) codeList.indexOf(lastCode) else 0
+    val newList = codeList.slice(indexOf until codeList.size)
 
     newList.asSequence().batch(120).forEach {
         println("Began request for LaPoste ${LocalDateTime.now()}")

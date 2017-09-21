@@ -2,7 +2,7 @@ package com.br.gbhaters.tracking
 
 import java.io.File
 
-class CodeGenerator(private val prefix: String = "FAF", private val suffix: String = "FR") {
+class CodeGenerator(private val prefix: String = "EY", private val suffix: String = "FR") {
     private fun makeCode(token: String): String {
         return this.prefix + token + this.suffix
     }
@@ -26,7 +26,7 @@ class CodeGenerator(private val prefix: String = "FAF", private val suffix: Stri
 
 
 fun main(args: Array<String>) {
-    val codeGenerator = CodeGenerator("EY8930", suffix = "FR")
+    val codeGenerator = CodeGenerator("EY3321", suffix = "FR")
 
     val codeList = codeGenerator.generateAllCodes()
 
