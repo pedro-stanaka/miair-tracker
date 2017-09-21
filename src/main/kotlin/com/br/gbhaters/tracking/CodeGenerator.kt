@@ -26,7 +26,7 @@ class CodeGenerator(private val prefix: String = "EY", private val suffix: Strin
 
 
 fun main(args: Array<String>) {
-    val codeGenerator = CodeGenerator("EY3321", suffix = "FR")
+    val codeGenerator = CodeGenerator("EY3319", suffix = "FR")
 
     val codeList = codeGenerator.generateAllCodes()
 
